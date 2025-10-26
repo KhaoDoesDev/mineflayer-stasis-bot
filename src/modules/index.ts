@@ -3,3 +3,4 @@ export * from "./look_at_players";
 export * from "./velocity";
 export * from "./statis";
 export * from "./auto_log";
+export * from "./stay_at_home";

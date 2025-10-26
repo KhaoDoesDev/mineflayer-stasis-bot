@@ -6,6 +6,7 @@ export type Config = {
   version: string;
   homePosition: { x: number; y: number; z: number };
   whitelist: string[];
+  reconnectInterval: number;
 }
 
 export type ChamberEntry = {

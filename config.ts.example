@@ -10,4 +10,5 @@ export const config = {
   whitelist: [
     "Notch"
   ]
+  reconnectInterval: 10, // in seconds
 } as Config;

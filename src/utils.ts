@@ -54,12 +54,10 @@ export function whisper(username: string, message: string) {
 }
 
 export async function goHome() {
-  const homeVec = new Vec3(
-    config.homePosition.x,
-    config.homePosition.y,
-    config.homePosition.z
-  );
-  await goToBlock(homeVec).catch((err) => {
-    console.error("Failed to go to home position:", err);
-  });
+  const homeVec = toVec3(config.homePosition);
+  if (homeVec.distanceTo(bot.entity.position) > 0.5) {
+    await goToBlock(homeVec).catch((err) => {
+      console.error("Failed to go to home position:", err);
+    });
+  }
 }
