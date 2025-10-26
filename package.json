@@ -1,0 +1,21 @@
+{
+  "name": "mineflayer-statis-bot",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "start": "bun run src/index.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "lowdb": "^7.0.1",
+    "mineflayer": "^4.33.0",
+    "mineflayer-armor-manager": "^2.0.1",
+    "mineflayer-auto-eat": "^5.0.3",
+    "mineflayer-pathfinder": "^2.4.5"
+  }
+}

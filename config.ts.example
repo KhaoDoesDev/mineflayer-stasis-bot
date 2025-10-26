@@ -1,0 +1,13 @@
+import type { Config } from "./src/types";
+
+export const config = {
+  host: "localhost",
+  port: 25565,
+  username: "StatisBot",
+  auth: "offline",
+  version: "1.21.8",
+  homePosition: { x: 0, y: 0, z: 0 }, 
+  whitelist: [
+    "Notch"
+  ]
+} as Config;
