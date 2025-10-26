@@ -23,6 +23,7 @@ export const db = await JSONFilePreset<StasisDatabase>("db.json", {
 await db.read();
 
 export let bot: Bot;
+export let isWorking: boolean = false;
 function createBot() {
   bot = mineflayer.createBot({
     host: config.host,
@@ -92,7 +93,9 @@ function createBot() {
 
         try {
           whisper(username, `Walking to your chamber...`);
+          isWorking = true;
           await triggerChamber(toVec3(chamber.trapdoorLocation));
+          isWorking = false;
           whisper(username, `Welcome back, ${username}!`);
         } catch (err: any) {
           whisper(username, `Failed to trigger: ${err?.message ?? err}`);

@@ -10,6 +10,9 @@ const lastPearlByPlayer = new Map<string, number>();
 export function statis(bot: Bot) {
   bot.on("entitySpawn", async (e: Entity) => {
     if (e.name !== "ender_pearl") return;
+
+    await db.read();
+    if (db.data.chambers.some(c => c.lastPearlUuid === e.uuid)) return;
   
     const nearestPlayer = nearestPlayerTo(e.position, 5);
     if (!nearestPlayer?.uuid) return;
@@ -28,7 +31,6 @@ export function statis(bot: Bot) {
     const trapdoorPos = findNearbyTrapdoor(pearlBlock, 4);
     if (!trapdoorPos) return;
   
-    await db.read();
     const existing = db.data.chambers.find(
       (c) => c.ownerUuid === ownerUuid && sameXZ(c.trapdoorLocation, trapdoorPos)
     );
