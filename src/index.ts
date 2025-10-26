@@ -94,7 +94,7 @@ function createBot() {
         try {
           whisper(username, `Walking to your chamber...`);
           isWorking = true;
-          await triggerChamber(chamber.ownerUuid, toVec3(chamber.trapdoorLocation));
+          await triggerChamber(chamber);
           isWorking = false;
           whisper(username, `Welcome back, ${username}!`);
         } catch (err: any) {

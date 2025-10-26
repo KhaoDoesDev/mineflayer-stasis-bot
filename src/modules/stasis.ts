@@ -1,6 +1,6 @@
 import type { Bot } from "mineflayer";
 import { Entity } from "prismarine-entity";
-import { centerOf, dist2D, goHome, goNearBlock, nearestPlayerTo, sameXZ, whisper } from "../utils";
+import { centerOf, dist2D, goHome, goNearBlock, nearestPlayerTo, sameXZ, toVec3, whisper } from "../utils";
 import { bot, db } from "..";
 import type { ChamberEntry } from "../types";
 import { Vec3 } from "vec3";
@@ -97,22 +97,32 @@ function isLikelyTrapdoor(blockName?: string) {
   return !!blockName && blockName.endsWith("_trapdoor") && !blockName.includes("iron");
 }
 
-export async function triggerChamber(playerUuid: string, targetPos: Vec3) {
+export function playerUuidToUsername(uuid: string) {
+  return Object.values(bot.players).find((p) => p.uuid === uuid)?.username; 
+}
+
+export async function triggerChamber(chamber: ChamberEntry) {
+  const targetPos = toVec3(chamber.trapdoorLocation);
   await goNearBlock(targetPos, 3);
   const look = centerOf(targetPos);
   await bot.lookAt(look, true);
-  const block = bot.blockAt(new Vec3(targetPos.x, targetPos.y, targetPos.z));
-  if (!block) return console.warn("Trigger block not found or not loaded.");
-  await bot.activateBlock(block);
-  await new Promise<void>((resolve) => {
-    const entitySpawnHandler = (e: Entity) => {
-      if (e.type === "player" && e.uuid! === playerUuid) {
-        bot.removeListener("entitySpawn", entitySpawnHandler);
-        resolve();
-      }
-    };
-    bot.on("entitySpawn", entitySpawnHandler);
-  });
-  await bot.activateBlock(block);
+  const block = bot.blockAt(targetPos);
+  if (!block) {
+    const username = playerUuidToUsername(chamber.ownerUuid);
+    if (username) whisper(username, `Trapdoor not found or not loaded.`); 
+    console.warn("Trapdoor not found or not loaded.");
+  } else {
+    await bot.activateBlock(block);
+    await new Promise<void>((resolve) => {
+      const entityGoneHandler = (e: Entity) => {
+        if (e.name === "ender_pearl" && e.uuid === chamber.lastPearlUuid) {
+          bot.removeListener("entityGone", entityGoneHandler);
+          resolve();
+        };
+      };
+      bot.on("entityGone", entityGoneHandler);
+    });
+    await bot.activateBlock(block);
+  }
   await goHome();
 }
