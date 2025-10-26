@@ -1,4 +1,6 @@
-# Stasis Bot in Mineflayer.js
+# Mineflayer Stasis Bot
+A simple mineflayer bot that can be used to flip trapdoors.
+
 Mostly based off of [EnderKill98's Azalea Stasis Bot](https://github.com/EnderKill98/stasis-bot) 
 
 ## Modules
