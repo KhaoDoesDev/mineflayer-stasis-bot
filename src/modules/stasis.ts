@@ -7,7 +7,7 @@ import { Vec3 } from "vec3";
 
 const lastPearlByPlayer = new Map<string, number>();
 
-export function statis(bot: Bot) {
+export function stasis(bot: Bot) {
   bot.on("entitySpawn", async (e: Entity) => {
     if (e.name !== "ender_pearl") return;
 
@@ -97,15 +97,22 @@ function isLikelyTrapdoor(blockName?: string) {
   return !!blockName && blockName.endsWith("_trapdoor") && !blockName.includes("iron");
 }
 
-export async function triggerChamber(targetPos: Vec3) {
+export async function triggerChamber(playerUuid: string, targetPos: Vec3) {
   await goNearBlock(targetPos, 3);
   const look = centerOf(targetPos);
   await bot.lookAt(look, true);
   const block = bot.blockAt(new Vec3(targetPos.x, targetPos.y, targetPos.z));
   if (!block) return console.warn("Trigger block not found or not loaded.");
   await bot.activateBlock(block);
-  await bot.waitForTicks(1);
+  await new Promise<void>((resolve) => {
+    const entitySpawnHandler = (e: Entity) => {
+      if (e.type === "player" && e.uuid! === playerUuid) {
+        bot.removeListener("entitySpawn", entitySpawnHandler);
+        resolve();
+      }
+    };
+    bot.on("entitySpawn", entitySpawnHandler);
+  });
   await bot.activateBlock(block);
-  await bot.waitForTicks(1);
   await goHome();
 }

@@ -11,7 +11,7 @@ import {
   autoTotem,
   latestChamberFor,
   lookAtPlayers,
-  statis,
+  stasis,
   stayAtHome,
   triggerChamber,
   velocity,
@@ -41,7 +41,7 @@ function createBot() {
       velocity,
       lookAtPlayers,
       autoTotem,
-      statis,
+      stasis,
       autoLog,
       stayAtHome
     ]);
@@ -94,7 +94,7 @@ function createBot() {
         try {
           whisper(username, `Walking to your chamber...`);
           isWorking = true;
-          await triggerChamber(toVec3(chamber.trapdoorLocation));
+          await triggerChamber(chamber.ownerUuid, toVec3(chamber.trapdoorLocation));
           isWorking = false;
           whisper(username, `Welcome back, ${username}!`);
         } catch (err: any) {
