@@ -5,6 +5,6 @@ export function lookAtPlayers(bot: Bot) {
     if (bot.pathfinder.isMoving()) return;
     const nearestPlayer = bot.nearestEntity(e => e.type === "player" && e.position.distanceTo(bot.entity.position) < 10);
     if (!nearestPlayer) return;
-    await bot.lookAt(nearestPlayer.position.offset(0, nearestPlayer.height, 0), true); 
+    await bot.lookAt(nearestPlayer.position.offset(0, nearestPlayer.height, 0), false); 
   });
 }

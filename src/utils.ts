@@ -55,7 +55,6 @@ export function whisper(username: string, message: string) {
 
 export async function goHome() {
   const homeVec = toVec3(config.homePosition);
-  console.log(homeVec.distanceTo(bot.entity.position))
   if (homeVec.distanceTo(bot.entity.position) > 1) {
     await goToBlock(homeVec).catch((err) => {
       console.error("Failed to go to home position:", err);
