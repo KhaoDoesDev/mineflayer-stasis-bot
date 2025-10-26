@@ -16,4 +16,10 @@ export function autoLog(bot: Bot) {
         process.exit(0);
     }
   });
+
+  bot.on("death", () => {
+    bot.end();
+    console.warn("[AutoLog] Disconnected due to death.");
+    process.exit(0);
+  });
 }
