@@ -40,7 +40,10 @@ const messagesFile = Bun.file("./messages.txt");
 let messages = ["Glad to see you again, %player%!", "Welcome back, %player%!"];
 if (await messagesFile.exists()) messages = (await messagesFile.text()).split("\n");
 
-export let bot: Bot;
+export let state = {
+  isWorking: false
+};
+export let bot: Bot
 function createBot() {
   bot = mineflayer.createBot({
     host: config.host,
@@ -100,9 +103,9 @@ function createBot() {
 
         try {
           whisper(username, `Walking to your stasis chamber...`);
-          bot.isWorking = true;
+          state.isWorking = true;
           await triggerChamber(chamber);
-          bot.isWorking = false;
+          state.isWorking = false;
           whisper(username, messages[Math.floor(Math.random() * messages.length)]!.replace("%player%", username));
         } catch (err: any) {
           whisper(username, `Failed to trigger: ${err?.message ?? err}`);

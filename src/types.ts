@@ -34,9 +34,3 @@ export type ChamberEntry = {
 export type StasisDatabase = {
   chambers: ChamberEntry[];
 };
-
-declare module "mineflayer" {
-  interface Bot {
-    isWorking: boolean;
-  }
-}
