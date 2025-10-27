@@ -1,0 +1,2 @@
+Glad to see you again, %player%!
+Welcome back, %player%!

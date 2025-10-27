@@ -1,6 +1,6 @@
 import type { Config } from "./src/types";
 
-export const config = {
+export const config: Config = {
   host: "localhost",
   port: 25565,
   username: "StatisBot",
@@ -11,4 +11,19 @@ export const config = {
     "Notch"
   ]
   reconnectInterval: 10, // in seconds
-} as Config;
+  modules: {
+    autoEat: true,
+    armorManager: true,
+    velocity: true,
+    noFall: true,
+    lookAtPlayers: true,
+    autoTotem: true,
+    stasis: true,
+    autoLog: true,
+    stayAtHome: true,
+    killAura: {
+      enabled: true,
+      whitelist: ["player", "enderman", "zombified_piglin"]
+    },
+  }
+};

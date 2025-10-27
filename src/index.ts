@@ -1,14 +1,15 @@
-import mineflayer, { type Bot } from "mineflayer";
+import mineflayer, { type Bot, type Plugin } from "mineflayer";
 import { pathfinder, Movements } from "mineflayer-pathfinder";
 import { JSONFilePreset } from "lowdb/node";
 import { config } from "../config";
 import type { StasisDatabase } from "./types";
-import { goHome, toVec3, whisper } from "./utils";
+import { goHome, whisper } from "./utils";
 import { loader as autoEat } from "mineflayer-auto-eat";
 import armorManager from "mineflayer-armor-manager";
 import {
   autoLog,
   autoTotem,
+  killAura,
   latestChamberFor,
   lookAtPlayers,
   stasis,
@@ -16,14 +17,30 @@ import {
   triggerChamber,
   velocity,
 } from "./modules";
+import { noFall } from "./modules/no_fall";
 
 export const db = await JSONFilePreset<StasisDatabase>("db.json", {
   chambers: [],
 });
 await db.read();
 
+const modules: Plugin[] = [];
+if (config.modules.autoEat) modules.push(autoEat);
+if (config.modules.armorManager) modules.push(armorManager);
+if (config.modules.velocity) modules.push(velocity);
+if (config.modules.noFall) modules.push(noFall);
+if (config.modules.lookAtPlayers) modules.push(lookAtPlayers);
+if (config.modules.autoTotem) modules.push(autoTotem);
+if (config.modules.stasis) modules.push(stasis);
+if (config.modules.autoLog) modules.push(autoLog);
+if (config.modules.stayAtHome) modules.push(stayAtHome);
+if (config.modules.killAura.enabled) modules.push(killAura);
+
+const messagesFile = Bun.file("./messages.txt");
+let messages = ["Glad to see you again, %player%!", "Welcome back, %player%!"];
+if (await messagesFile.exists()) messages = (await messagesFile.text()).split("\n");
+
 export let bot: Bot;
-export let isWorking: boolean = false;
 function createBot() {
   bot = mineflayer.createBot({
     host: config.host,
@@ -34,18 +51,8 @@ function createBot() {
   });
 
   bot.once("inject_allowed", () => {
-    bot.loadPlugins([
-      pathfinder,
-      autoEat,
-      armorManager,
-      velocity,
-      lookAtPlayers,
-      autoTotem,
-      stasis,
-      autoLog,
-      stayAtHome
-    ]);
-    bot.autoEat.enableAuto();
+    bot.loadPlugins([pathfinder, ...modules]);
+    if (config.modules.autoEat) bot.autoEat.enableAuto();
 
     const movements = new Movements(bot);
     movements.canDig = false;
@@ -92,11 +99,11 @@ function createBot() {
         }
 
         try {
-          whisper(username, `Walking to your chamber...`);
-          isWorking = true;
+          whisper(username, `Walking to your stasis chamber...`);
+          bot.isWorking = true;
           await triggerChamber(chamber);
-          isWorking = false;
-          whisper(username, `Welcome back, ${username}!`);
+          bot.isWorking = false;
+          whisper(username, messages[Math.floor(Math.random() * messages.length)]!.replace("%player%", username));
         } catch (err: any) {
           whisper(username, `Failed to trigger: ${err?.message ?? err}`);
         }

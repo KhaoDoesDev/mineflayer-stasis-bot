@@ -5,8 +5,23 @@ export type Config = {
   auth: "mojang" | "microsoft" | "offline";
   version: string;
   homePosition: { x: number; y: number; z: number };
-  whitelist: string[];
   reconnectInterval: number;
+  whitelist: string[];
+  modules: {
+    autoEat: boolean;
+    armorManager: boolean;
+    velocity: boolean;
+    noFall: boolean;
+    lookAtPlayers: boolean;
+    autoTotem: boolean;
+    stasis: boolean;
+    autoLog: boolean;
+    stayAtHome: boolean;
+    killAura: {
+      enabled: boolean;
+      whitelist?: string[];
+    }
+  }
 }
 
 export type ChamberEntry = {
@@ -19,3 +34,9 @@ export type ChamberEntry = {
 export type StasisDatabase = {
   chambers: ChamberEntry[];
 };
+
+declare module "mineflayer" {
+  interface Bot {
+    isWorking: boolean;
+  }
+}

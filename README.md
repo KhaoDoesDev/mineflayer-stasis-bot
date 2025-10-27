@@ -19,7 +19,7 @@ bun run start
 
 > [!WARNING]
 > **The bot may not work properly on servers with anti-cheat enabled. Use at your own risk.**
-> All modules are toggleable by not loading them in the `bot.loadPlugins` function.
+> All modules are toggleable by not loading them in the config file.
 
 ## License
 MIT
