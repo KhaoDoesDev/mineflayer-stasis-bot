@@ -10,6 +10,7 @@ Mostly based off of [EnderKill98's Azalea Stasis Bot](https://github.com/EnderKi
 - Look At Players: Looks at the nearest player in a 10 block radius.
 - Stay At Home: Returns to home when the bot is more than 1 block away.
 - Velocity*: Tries to stop all movement when not working.
+- Kill Aura: Kills all hostile mobs near the bot.
 
 ## Usage
 ```bash
