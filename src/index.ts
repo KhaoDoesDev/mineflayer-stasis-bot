@@ -86,8 +86,11 @@ function createBot() {
     if (username === bot.username) return;
     if (!config.whitelist.includes(username)) return;
 
-    switch (message.trim().toLowerCase()) {
-      case "!tp":
+    const command = message.split(" ")[0]!.slice(1).toLowerCase();
+    const args = message.split(" ").slice(1);
+
+    switch (command) {
+      case "tp":
         await db.read();
         const player = bot.players[username];
         if (!player?.uuid) {
@@ -112,13 +115,13 @@ function createBot() {
         }
         return;
 
-      case "!home":
+      case "home":
         whisper(username, "Going home.");
         await goHome();
         whisper(username, "Arrived home.");
         return;
 
-      case "!printinv":
+      case "printinv":
         whisper(
           username,
           "Inventory: " +
@@ -129,7 +132,7 @@ function createBot() {
         );
         return;
 
-      case "!nearby":
+      case "nearby":
         const nearby = Object.values(bot.players).filter(
           (p) => p.entity?.position?.distanceTo(bot.entity.position) < 10
         );
