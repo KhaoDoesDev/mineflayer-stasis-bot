@@ -85,6 +85,7 @@ function createBot() {
   bot.on("whisper", async (username, message) => {
     if (username === bot.username) return;
     if (!config.whitelist.includes(username)) return;
+    if (!message.startsWith("!")) return;
 
     const command = message.split(" ")[0]!.slice(1).toLowerCase();
     const args = message.split(" ").slice(1);
