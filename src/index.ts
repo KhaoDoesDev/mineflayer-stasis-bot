@@ -12,12 +12,17 @@ import {
   killAura,
   latestChamberFor,
   lookAtPlayers,
+  noFall,
   stasis,
   stayAtHome,
   triggerChamber,
   velocity,
 } from "./modules";
-import { noFall } from "./modules/no_fall";
+import { env } from "bun";
+
+if (config.encryptCoordinates && !env.DB_SECRET) {
+  throw new Error("DB_SECRET environment variable is required for encrypted coordinates.");
+}
 
 export const db = await JSONFilePreset<StasisDatabase>("db.json", {
   chambers: [],
@@ -84,7 +89,7 @@ function createBot() {
 
   bot.on("whisper", async (username, message) => {
     if (username === bot.username) return;
-    if (!config.whitelist.includes(username)) return;
+    if (config.whitelist.enabled && !config.whitelist.players.includes(username)) return; 
     if (!message.startsWith("!")) return;
 
     const command = message.split(" ")[0]!.slice(1).toLowerCase();
@@ -108,21 +113,23 @@ function createBot() {
         try {
           whisper(username, `Walking to your stasis chamber...`);
           state.isWorking = true;
-          await triggerChamber(chamber);
+          const result = await triggerChamber(chamber);
           state.isWorking = false;
-          whisper(username, messages[Math.floor(Math.random() * messages.length)]!.replace("%player%", username));
+          whisper(username, result ? messages[Math.floor(Math.random() * messages.length)]!.replace("%player%", username) : "Stasis failed!"); 
         } catch (err: any) {
           whisper(username, `Failed to trigger: ${err?.message ?? err}`);
         }
         return;
 
       case "home":
+        if (!config.authorizedPlayers.includes(username)) return;
         whisper(username, "Going home.");
         await goHome();
         whisper(username, "Arrived home.");
         return;
 
       case "printinv":
+        if (!config.authorizedPlayers.includes(username)) return;
         whisper(
           username,
           "Inventory: " +
@@ -134,6 +141,7 @@ function createBot() {
         return;
 
       case "nearby":
+        if (!config.authorizedPlayers.includes(username)) return;
         const nearby = Object.values(bot.players).filter(
           (p) => p.entity?.position?.distanceTo(bot.entity.position) < 10
         );

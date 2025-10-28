@@ -6,7 +6,12 @@ export type Config = {
   version: string;
   homePosition: { x: number; y: number; z: number };
   reconnectInterval: number;
-  whitelist: string[];
+  whitelist: {
+    enabled: boolean;
+    players: string[];
+  };
+  authorizedPlayers: string[];
+  encryptCoordinates: boolean;
   modules: {
     autoEat: boolean;
     armorManager: boolean;
@@ -28,7 +33,7 @@ export type ChamberEntry = {
   ownerUuid: string;
   lastPearlUuid?: string;
   lastThrownAt?: number;
-  trapdoorLocation: { x: number; y: number; z: number };
+  trapdoorLocation: { x: number; y: number; z: number } | string;
 };
 
 export type StasisDatabase = {

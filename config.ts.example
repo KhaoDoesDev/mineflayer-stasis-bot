@@ -7,9 +7,16 @@ export const config: Config = {
   auth: "offline",
   version: "1.21.8",
   homePosition: { x: 0, y: 0, z: 0 }, 
-  whitelist: [
+  whitelist: {
+    enabled: true,
+    players: [
+      "Steve"
+    ]
+  }
+  authorizedPlayers: [
     "Notch"
-  ]
+  ],
+  encryptCoordinates: false,
   reconnectInterval: 10, // in seconds
   modules: {
     autoEat: true,
