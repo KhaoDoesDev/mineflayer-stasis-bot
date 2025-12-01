@@ -5,6 +5,7 @@ services:
     tty: true
     volumes:
       - ./data:/app/data
+      - ./data/profiles:/app/data/profiles
       - ./config.ts:/app/config.ts:ro
       - ./messages.txt:/app/messages.txt:ro
     env_file:
