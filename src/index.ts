@@ -24,7 +24,7 @@ if (config.encryptCoordinates && !env.DB_SECRET) {
   throw new Error("DB_SECRET environment variable is required for encrypted coordinates.");
 }
 
-export const db = await JSONFilePreset<StasisDatabase>("db.json", {
+export const db = await JSONFilePreset<StasisDatabase>("data/db.json", {
   chambers: [],
 });
 await db.read();
@@ -41,7 +41,7 @@ if (config.modules.autoLog) modules.push(autoLog);
 if (config.modules.stayAtHome) modules.push(stayAtHome);
 if (config.modules.killAura.enabled) modules.push(killAura);
 
-const messagesFile = Bun.file("./messages.txt");
+const messagesFile = Bun.file("./data/messages.txt");
 let messages = ["Glad to see you again, %player%!", "Welcome back, %player%!"];
 if (await messagesFile.exists()) messages = (await messagesFile.text()).split("\n");
 
@@ -56,6 +56,7 @@ function createBot() {
     username: config.username,
     auth: config.auth,
     version: config.version,
+    profilesFolder: "./data/profiles",
   });
 
   bot.once("inject_allowed", () => {

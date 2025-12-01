@@ -1,0 +1,12 @@
+services:
+  bot:
+    build: .
+    container_name: mineflayer-bot
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - ./data:/app/data
+      - ./config.ts:/app/config.ts:ro
+      - ./messages.txt:/app/messages.txt:ro
+    env_file:
+      - .env
