@@ -1,7 +1,6 @@
 services:
   bot:
     build: .
-    container_name: mineflayer-bot
     restart: unless-stopped
     tty: true
     volumes:
